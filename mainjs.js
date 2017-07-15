@@ -1,7 +1,7 @@
-
 //global variables
 const names = $(".student-item");
 let searchedNames = [];
+const amountPerPage = 10; //number of names to show per page
 
 
 //>>>>>>>>FUNCTIONS
@@ -26,25 +26,28 @@ function removeActiveClass(){
 	$(".pagination .btn").removeClass("active");
 }
 
-function showPage(aName, pageNumber){
+//default the page number to be 1
+function showPage(aName, pageNumber=1){
 	$(searchedNames).hide()
 	$(names).hide()
 	var sliceFirst = (pageNumber*10) - 10;
 	var sliceSecond = pageNumber * 10;
 	$(aName).slice(sliceFirst, sliceSecond).show()
-	
+
 }
 
 //function to create the pag buttons
 function appendButtons(Aname){
 	$(".pagination").html("");
-	//console.log("this ideot")
-	//bval = calculte the number of buttons to create
-	let bval = Math.floor((Aname.length - 1)/10)
-	for (let i = 0; i <= bval; i++) {
-		createButtons(i+1);
+	//only put the pagi nave if there is more than 1 page
+	if (Aname.length > amountPerPage) {
+		//console.log("this ideot")
+		//bval = calculte the number of buttons to create
+		let bval = Math.floor((Aname.length - 1)/10)
+		for (let i = 0; i <= bval; i++) {
+			createButtons(i+1);
+		}
 	}
-
 }
 
 //function to display a message if no names found on search
@@ -95,20 +98,20 @@ $('.page-header').on("click", (e)=> {
 			let studentName = $(this).text().toLowerCase();
 			let sEmail = $(this).next().text();
 			//console.log(sEmail)
-			
+
 			//check if the name or email maches the input value
 			if(studentName.indexOf(inputValue) > -1 || sEmail.indexOf(inputValue) > -1){
 				console.log("found")
 				let parentDiv = $(this).parent().parent()[0]
-				searchedNames.push(parentDiv)		
+				searchedNames.push(parentDiv)
 				//console.log($(this).parent().parent())
-      		} //if 
+      		} //if
 	  	});//loop each
 		//initially show the first page of the searched names
-		showPage(searchedNames, 1)
-      	appendButtons(searchedNames);
-      	//if no name matched, display the errmessage
-      	if (searchedNames.length < 1) {
+		 showPage(searchedNames)
+     appendButtons(searchedNames);
+  	 //if no name matched, display the errmessage
+     if (searchedNames.length < 1) {
       		errMessage(inputValue)
   		}
   		//add the active class to the first btn
@@ -118,15 +121,8 @@ $('.page-header').on("click", (e)=> {
 
 
 
-// WHEN THE PAGE LOADS, INITIALLY DO THESE 
+// WHEN THE PAGE LOADS, INITIALLY DO THESE
 addSearchBar();
-showPage(names, 1);
+showPage(names);
 appendButtons(names);
 $(".pagination button:first").addClass("active");
-
-
-
-
-
-
-
